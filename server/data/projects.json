@@ -1,0 +1,18 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "Portfolio",
+      "category": "Web App",
+      "description": "Portfolio website for showcasing projects and skills.",
+      "image": "https://i.ibb.co/1tnk86pp/Portfolio-Website-Photo.png",
+      "technologies": [
+        "Node.js",
+        "Nuxt.js"
+      ],
+      "demo": "https://yousseifmuhammed.vercel.app",
+      "github": "https://github.com/usif-x",
+      "status": true
+    }
+  ]
+}
