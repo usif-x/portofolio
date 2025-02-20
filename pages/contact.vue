@@ -139,15 +139,6 @@
               </div>
             </div>
           </div>
-
-          <div class="relative group overflow-hidden rounded-2xl h-[200px]">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-20"></div>
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d27814.54749371281!2d31.24967233955078!3d30.044420000000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDAyJzM5LjkiTiAzMcKwMTUnNTQuOSJF!5e0!3m2!1sen!2seg!4v1625136873278!5m2!1sen!2seg"
-              class="w-full h-full border-0"
-              loading="lazy">
-            </iframe>
-          </div>
         </div>
       </div>
     </div>

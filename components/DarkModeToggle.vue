@@ -63,8 +63,9 @@
       
       <!-- Sliding circle -->
       <span
-        :style="{ transform: isDarkMode ? 'translateX(2.625rem)' : 'translateX(0)', backgroundColor: 'var(--slider-bg)' }"
         class="absolute top-0.5 left-0.5 w-8 h-8 rounded-full flex items-center justify-center transition duration-500 transform"
+        :class="isDarkMode ? 'translate-x-[2.625rem]' : 'translate-x-0'"
+        :style="{ backgroundColor: 'var(--slider-bg)' }"
       >
         <!-- Sun icon inside circle -->
         <svg
@@ -123,8 +124,12 @@
 
 
 <script setup>
+import { onMounted } from 'vue'
 import { useDarkMode } from '@/composables/useDarkMode'
 
-const { isDarkMode, toggleDarkMode } = useDarkMode()
+const { isDarkMode, toggleDarkMode, initTheme } = useDarkMode()
 
+onMounted(() => {
+  initTheme()
+})
 </script>
