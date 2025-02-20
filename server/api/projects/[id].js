@@ -1,33 +1,21 @@
+import { createClient } from '@vercel/edge-config'
 import { defineEventHandler, createError, readBody } from 'h3'
-import { readFileSync, writeFileSync } from 'fs'
-import { resolve } from 'path'
-
-const dataPath = resolve('./server/data/projects.json')
-
-const getProjects = () => {
-  try {
-    const data = readFileSync(dataPath, 'utf8')
-    return JSON.parse(data).projects
-  } catch (error) {
-    console.error('Error reading projects:', error)
-    return []
-  }
-}
-
-const saveProjects = (projects) => {
-  try {
-    writeFileSync(dataPath, JSON.stringify({ projects }, null, 2), 'utf8')
-    return true
-  } catch (error) {
-    console.error('Error saving projects:', error)
-    return false
-  }
-}
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig()
+  
+  if (!config.EDGE_CONFIG) {
+    console.error('EDGE_CONFIG environment variable is not set')
+    throw createError({
+      statusCode: 500,
+      message: 'Server configuration error'
+    })
+  }
+
   try {
+    const client = createClient(config.EDGE_CONFIG)
     const id = parseInt(event.context.params.id)
-    const projects = getProjects()
+    const projects = await client.get('projects') || []
     
     // Handle PUT request for updating
     if (event.method === 'PUT') {
@@ -42,16 +30,19 @@ export default defineEventHandler(async (event) => {
       const body = await readBody(event)
       projects[index] = { ...body, id }
       
-      if (!saveProjects(projects)) {
+      try {
+        await client.set('projects', projects)
+        return projects[index]
+      } catch (error) {
+        console.error('Failed to update project:', error)
         throw createError({
           statusCode: 500,
           message: 'Failed to update project'
         })
       }
-      
-      return projects[index]
     }
     
+    // Handle DELETE request
     if (event.method === 'DELETE') {
       const index = projects.findIndex(p => p.id === id)
       if (index === -1) {
@@ -62,14 +53,16 @@ export default defineEventHandler(async (event) => {
       }
       
       projects.splice(index, 1)
-      if (!saveProjects(projects)) {
+      try {
+        await client.set('projects', projects)
+        return { message: 'Project deleted successfully' }
+      } catch (error) {
+        console.error('Failed to delete project:', error)
         throw createError({
           statusCode: 500,
           message: 'Failed to delete project'
         })
       }
-      
-      return { message: 'Project deleted successfully' }
     }
     
     // GET request
@@ -83,6 +76,7 @@ export default defineEventHandler(async (event) => {
     
     return project
   } catch (error) {
+    console.error('Error in project handler:', error)
     throw createError({
       statusCode: error.statusCode || 500,
       message: error.message || 'Internal server error'

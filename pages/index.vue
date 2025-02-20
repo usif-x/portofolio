@@ -78,6 +78,9 @@ import { ref, watch, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import Typed from 'typed.js'
 import { useDarkMode } from '@/composables/useDarkMode'
+useHead({
+  title: 'Yousseif Muhammed'
+})
 
 const { isDarkMode } = useDarkMode()
 

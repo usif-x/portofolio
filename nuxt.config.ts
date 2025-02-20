@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   app: {
-    layoutTransition: { name: 'layout', mode: 'out-in' },
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     // Private keys that are exposed to the server
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+    EDGE_CONFIG: process.env.EDGE_CONFIG,
     // Public keys that are exposed to the client
     public: {
       adminEmail: process.env.NUXT_PUBLIC_ADMIN_EMAIL,
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
     
   },
   nitro: {
+    preset: 'vercel',
     publicAssets: [
       {
         dir: 'public',

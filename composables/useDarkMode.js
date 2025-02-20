@@ -15,6 +15,7 @@ export function useDarkMode() {
       isDarkMode.value = savedTheme ? savedTheme === 'true' : window.matchMedia('(prefers-color-scheme: dark)').matches
       updateTheme()
       updateLogo()
+      console.log('Dark mode initialized:', isDarkMode.value)
     }
 
     const updateLogo = () => {

@@ -3,9 +3,10 @@
     <Toast ref="toastRef" />
 
     <div class="absolute inset-0 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950">
-      <div class="absolute inset-0 bg-grid-pattern opacity-[0.03]"></div>
-      <div class="absolute w-[500px] h-[500px] top-0 left-0 bg-blue-500/30 dark:bg-blue-500/10 rounded-full blur-3xl"></div>
-      <div class="absolute w-[500px] h-[500px] bottom-0 right-0 bg-purple-500/30 dark:bg-purple-500/10 rounded-full blur-3xl"></div>
+       <div class="absolute top-[-10%] right-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-slow"></div>
+    <div class="absolute bottom-[-10%] left-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-delayed"></div>
+
+
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -156,8 +157,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { Icon } from '@iconify/vue'
-import Toast from '~/components/Toast.vue'
+import Toast from '~/components/toast.vue'
 import { sendContactMessage } from '@/api/contact'
+useHead({
+  title: 'Contact With Me'
+})
 
 const toastRef = ref(null)
 const formData = reactive({

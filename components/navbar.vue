@@ -1,57 +1,14 @@
 <template>
   <div>
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300"
-         :class="[scrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur shadow' : 'bg-transparent']">
+    <nav class="fixed top-0 w-full z-50 transition duration-500 ease"
+         :class="[scrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur shadow transition duration-500 ease' : 'bg-transparent transition duration-500 ease']">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 sm:h-20">
-          <NuxtLink to="/" class="relative flex items-center">
-            <img 
-              :src="currentLogo"
-              alt="Logo"
-              class="h-8 w-auto transition-all duration-500"
-              :class="{
-                'opacity-0 scale-150': isTransitioning,
-                'opacity-100 scale-100': !isTransitioning
-              }"
-              @load="isTransitioning = false"
-            />
-          </NuxtLink>
-
-          <div class="hidden md:flex items-center gap-8">
-            <NuxtLink 
-              v-for="link in ['Home', 'About', 'Skills', 'Projects', 'Contact']"
-              :key="link"
-              :to="link === 'Home' ? '/' : `/${link.toLowerCase()}`"
-              class="font-cairo text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300 relative group py-2"
-            >
-              {{ link }}
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
-            </NuxtLink>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <button 
-              @click="toggleDarkMode"
-              class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all duration-300 hover:scale-110"
-              aria-label="Toggle Dark Mode"
-            >
-              <div class="relative w-5 h-5">
-                <Icon 
-                  icon="mdi:weather-sunny" 
-                  class="w-5 h-5 absolute transition-all duration-300"
-                  :class="[isDarkMode ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100']"
-                />
-                <Icon 
-                  icon="mdi:weather-night" 
-                  class="w-5 h-5 absolute transition-all duration-300"
-                  :class="[isDarkMode ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0']"
-                />
-              </div>
-            </button>
-
+        <div class="flex items-center h-16 sm:h-20">
+          <!-- Mobile: Left - Burger Menu -->
+          <div class="flex-1 md:hidden">
             <button 
               @click="toggleMenu"
-              class="md:hidden relative p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110"
+              class="relative p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110"
               aria-label="Toggle Menu"
             >
               <div class="w-6 h-5 relative flex flex-col justify-between">
@@ -70,9 +27,44 @@
               </div>
             </button>
           </div>
+
+          <!-- Logo - Center on mobile, left on desktop -->
+          <div class="flex-1 flex justify-center md:justify-start">
+            <NuxtLink to="/" class="relative flex items-center">
+              <img 
+                :src="currentLogo"
+                alt="Logo"
+                class="h-8 w-auto transition-all duration-500"
+                :class="{
+                  'opacity-0 scale-150': isTransitioning,
+                  'opacity-100 scale-100': !isTransitioning
+                }"
+                @load="isTransitioning = false"
+              />
+            </NuxtLink>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center gap-8 flex-1 justify-center">
+            <NuxtLink 
+              v-for="link in ['Home', 'About', 'Skills', 'Projects', 'Contact']"
+              :key="link"
+              :to="link === 'Home' ? '/' : `/${link.toLowerCase()}`"
+              class="font-cairo text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300 relative group py-2"
+            >
+              {{ link }}
+              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+            </NuxtLink>
+          </div>
+
+          <!-- Dark Mode Toggle - Right -->
+          <div class="flex-1 flex justify-end">
+            <DarkModeToggle />
+          </div>
         </div>
       </div>
 
+      <!-- Rest of the mobile menu code remains the same -->
       <transition
         enter-active-class="transition duration-300 ease-out"
         enter-from-class="transform -translate-y-4 opacity-0"
@@ -106,6 +98,7 @@
       </transition>
     </nav>
 
+    <!-- Backdrop -->
     <transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -123,11 +116,13 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useDarkMode } from '@/composables/useDarkMode'
 import { useLogoTransition } from '~/composables/useLogoTransition'
+import DarkModeToggle from '@/components/DarkModeToggle.vue'
 
 const { isDarkMode, toggleDarkMode, currentLogo, isTransitioning } = useDarkMode()
 
