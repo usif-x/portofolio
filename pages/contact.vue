@@ -1,5 +1,5 @@
 <template>
-  <section class="relative py-20 overflow-hidden">
+    <section class="flex-grow relative flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black px-6 py-12 overflow-hidden transition-colors duration-300">
     <Toast ref="toastRef" />
     <div class="absolute top-[-10%] right-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-slow"></div>
     <div class="absolute bottom-[-10%] left-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-delayed"></div>
@@ -17,11 +17,11 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div class="relative group animate-slide-up">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="relative group animate-slide-up h-full">
           <div class="absolute inset-0 bg-white dark:bg-gray-800 rounded-2xl opacity-80 dark:opacity-90 backdrop-blur-xl"></div>
-          <div class="relative p-8 rounded-2xl">
-            <form @submit.prevent="handleSubmit" class="flex flex-col gap-6">
+          <div class="relative p-6 md:p-8 rounded-2xl h-full">
+            <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 md:gap-6">
               <div class="group">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Your Name
@@ -89,15 +89,15 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-8 animate-slide-up" style="animation-delay: 200ms;">
-          <div class="relative group">
+        <div class="flex flex-col h-full animate-slide-up" style="animation-delay: 200ms;">
+          <div class="relative group h-full">
             <div class="absolute inset-0 bg-white dark:bg-gray-800 rounded-2xl opacity-80 dark:opacity-90 backdrop-blur-xl"></div>
-            <div class="relative p-8 rounded-2xl">
+            <div class="relative p-6 md:p-8 rounded-2xl h-full flex flex-col">
               <h3 class="font-roboto text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Get in Touch
               </h3>
               
-              <div class="flex flex-col gap-6">
+              <div class="flex flex-col gap-6 flex-grow">
                 <a href="mailto:yousseifmuhammed@gmail.com" 
                    class="flex items-center gap-4 group/item">
                   <div class="p-3 rounded-xl bg-blue-500/10 group-hover/item:bg-blue-500/20 transition-colors">
@@ -108,19 +108,9 @@
                     <p class="text-gray-900 dark:text-white font-medium">yousseifmuhammed@gmail.com</p>
                   </div>
                 </a>
-
-                <div class="flex items-center gap-4 group/item">
-                  <div class="p-3 rounded-xl bg-purple-500/10 group-hover/item:bg-purple-500/20 transition-colors">
-                    <Icon icon="mdi:map-marker" class="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Location</p>
-                    <p class="text-gray-900 dark:text-white font-medium">Cairo, Egypt</p>
-                  </div>
-                </div>
               </div>
 
-              <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div class="mt-auto pt-8 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Follow Me
                 </h4>
