@@ -2,7 +2,7 @@
   <div id="darkModeContainer">
     <button
       ref="darkModeToggle"
-      class="dark-mode-btn relative inline-flex items-center py-1.5 px-2 rounded-full transition-colors duration-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus:outline-none focus-visible:ring-slate-500"
+      class="dark-mode-btn relative inline-flex items-center py-1.5 px-2 rounded-full transition-colors duration-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus:outline-none focus-visible:ring-slate-500 cursor-pointer"
       role="switch"
       tabindex="0"
       :aria-checked="isDarkMode.toString()"
