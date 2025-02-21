@@ -1,7 +1,12 @@
+@import "@fontsource/cairo/400.css";
+@import "@fontsource/cairo/500.css";
+@import "@fontsource/cairo/600.css";
+@import "@fontsource/cairo/700.css";
 @import "tailwindcss";
 @import "./main.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 body {
   scroll-behavior: smooth;
+  font-family: "Cairo", sans-serif;
 }
