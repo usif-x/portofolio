@@ -65,7 +65,7 @@
       <!-- Copyright -->
       <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
         <p class="font-cairo text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300">
-          &copy; {{ new Date().getFullYear() }} Yousseif Mohammed. All rights reserved.
+          &copy; {{ new Date().getFullYear() }} Yousseif Mohammed.
         </p>
         <p class="font-cairo text-xs text-gray-400 dark:text-gray-600 mt-1 transition-colors duration-300">
           Built with <Icon icon="mdi:heart" class="inline-block h-3 w-3 text-red-500" /> using Nuxt.js and Tailwind CSS
