@@ -1,5 +1,5 @@
 <template>
-  <section class="flex-grow relative flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 overflow-hidden transition-colors duration-300">
+  <section class="flex-grow relative min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 overflow-hidden transition-colors duration-300">
     <Toast ref="toastRef" />
     <!-- Background elements with fixed positioning -->
     <div class="absolute top-[-10%] right-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-slow"></div>

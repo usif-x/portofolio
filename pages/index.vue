@@ -1,24 +1,25 @@
 <template>
-  <section class="flex-grow relative flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black px-4 sm:px-6 lg:px-8 py-16 md:py-20 overflow-hidden transition-colors duration-300">
+  <section class="relative min-h-screen w-full flex flex-col justify-center items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black px-4 py-8 overflow-hidden transition-colors duration-300">
+    <!-- Animated gradient backgrounds -->
     <div class="absolute top-[-10%] right-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-slow"></div>
     <div class="absolute bottom-[-10%] left-[-5%] w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-[60px] sm:blur-[80px] md:blur-[100px] animate-float-delayed"></div>
 
+    <!-- Main content container -->
     <div class="relative z-10 w-full max-w-7xl mx-auto text-center">
+      <!-- Profile image container -->
       <div class="mb-4 sm:mb-6 md:mb-8 relative">
         <div class="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden ring-4 ring-white/20 dark:ring-white/10">
           <img 
             src="/images/profile.jpg"
             alt="Yousseif Mohammed Logo"
             class="w-full h-full object-cover transition-transform duration-300"
-            :class="{
-              'opacity-0 scale-95': isLogoTransitioning,
-              'opacity-100 scale-100': !isLogoTransitioning
-            }"
+            :class="{'opacity-0 scale-95': isLogoTransitioning, 'opacity-100 scale-100': !isLogoTransitioning}"
             @load="isLogoTransitioning = false"
           />
         </div>
       </div>
 
+      <!-- Text content -->
       <div class="px-4 sm:px-6 md:px-8">
         <h1 class="font-roboto text-[1.75rem] sm:text-[2.25rem] md:text-[3rem] lg:text-[4rem] xl:text-[5rem] font-bold leading-[1.2] sm:leading-tight mb-3 sm:mb-4 md:mb-6">
           <span class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-500 bg-clip-text text-transparent">
@@ -34,11 +35,12 @@
           Crafting exceptional digital experiences with modern web technologies
         </p>
 
+        <!-- Action buttons -->
         <div class="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10 md:mb-12">
           <NuxtLink to="/projects" class="w-full sm:w-auto">
-            <button class="font-cairo w-full h-full sm:w-auto group relative px-5 sm:px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-full text-white text-sm sm:text-base font-medium transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black">
+            <button class="font-cairo w-full h-full sm:w-auto group relative px-5 sm:px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-full text-white text-sm sm:text-base font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black">
               View Projects
-              <span class="absolute inset-0 rounded-full bg-white/[0.1] opacity-0 group-hover:opacity-100 transition-opacity"></span>
+              <span class="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
             </button>
           </NuxtLink>
           
@@ -49,6 +51,7 @@
           </NuxtLink>
         </div>
 
+        <!-- Social links -->
         <div class="flex justify-center space-x-3 sm:space-x-4 md:space-x-6 mb-6 sm:mb-8 md:mb-10">
           <a v-for="link in socialLinks" 
              :key="link.url"
@@ -64,6 +67,7 @@
       </div>
     </div>
 
+    <!-- Footer message -->
     <div class="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 sm:gap-3 md:gap-4 mb-4">
       <span class="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] animate-pulse text-center px-4">
         Let's build something amazing together
@@ -74,34 +78,36 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import Typed from 'typed.js'
 import { useDarkMode } from '@/composables/useDarkMode'
+
 useHead({
   title: 'Yousseif Muhammed'
 })
 
 const { isDarkMode } = useDarkMode()
+const isLogoTransitioning = ref(true)
 
 definePageMeta({
   layout: 'default'
 })
 
-// Initialize logo on mount
 onMounted(() => {
-  new Typed('#typing-text', {
-    strings: ['Coder', 'UI/UX Designer', 'Fullstack Developer'],
-    typeSpeed: 50,
-    backSpeed: 30,
-    backDelay: 2000,
-    loop: true,
-    cursorChar: '|',
-    smartBackspace: true
+  // Use requestAnimationFrame to improve performance
+  requestAnimationFrame(() => {
+    new Typed('#typing-text', {
+      strings: ['Coder', 'UI/UX Designer', 'Fullstack Developer'],
+      typeSpeed: 50,
+      backSpeed: 30,
+      backDelay: 2000,
+      loop: true,
+      cursorChar: '|',
+      smartBackspace: true
+    })
   })
 })
-
-// Watch for dark mode changes
 
 const socialLinks = [
   { 
@@ -120,44 +126,6 @@ const socialLinks = [
 </script>
 
 <style>
-@keyframes scrollLine {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  50.1% {
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-
-.animate-scrollLine {
-  animation: scrollLine 2s infinite;
-}
-
-/* Typed.js cursor style */
-.typed-cursor {
-  color: currentColor;
-  opacity: 1;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
 @keyframes float-slow {
   0% {
     transform: translateX(0) translateY(0);
@@ -190,7 +158,23 @@ const socialLinks = [
   animation: float-delayed 8s ease-in-out infinite 1s;
 }
 
-/* Add these styles to handle overflow */
+/* Handle Typed.js cursor styling */
+.typed-cursor {
+  color: currentColor;
+  opacity: 1;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Add these styles for handling viewport */
 html, body {
   overflow-x: hidden;
   width: 100%;
@@ -211,7 +195,7 @@ html, body {
 </style>
 
 <style scoped>
-/* Add these styles for smoother transitions */
+/* Responsive cursor size adjustments */
 .typed-cursor {
   font-size: inherit;
   line-height: inherit;
