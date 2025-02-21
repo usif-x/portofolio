@@ -13,11 +13,11 @@
             <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/20 dark:ring-white/10">
               <img 
                 src="/images/profile.jpg"
-                alt="Yousseif Mohammed Logo"
+                alt="Yousseif Muhammed Logo"
                 class="w-full h-full object-cover"
               />
             </div>
-            <h3 class="font-roboto text-lg font-bold text-gray-900 dark:text-white transition-colors duration-300">Yousseif Mohammed</h3>
+            <h3 class="font-roboto text-lg font-bold text-gray-900 dark:text-white transition-colors duration-300">Yousseif Muhammed</h3>
           </div>
           <p class="font-cairo text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
             Building modern web experiences with a focus on performance, accessibility, and beautiful design.
