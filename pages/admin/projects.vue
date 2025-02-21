@@ -1,4 +1,6 @@
+
 <script setup>
+import { supabase } from '~/utils/supabase'
 import { ref, computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 
@@ -70,26 +72,17 @@ const resetForm = () => {
   }
   isEditing.value = false
 }
-
-// Edit project
-const editProject = (project) => {
-  formData.value = { ...project }
-  isEditing.value = true
-  showForm.value = true
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-// Fetch projects
 const fetchProjects = async () => {
   loading.value = true
-  error.value = null // Reset error before fetching
+  error.value = null
   try {
-    const response = await fetch('/api/projects')
-    if (!response.ok) {
-      throw new Error('Failed to load projects')
-    }
-    const data = await response.json()
-    projects.value = data.projects || []
+    const { data, error: supabaseError } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (supabaseError) throw supabaseError
+    projects.value = data || []
   } catch (err) {
     error.value = `Failed to load projects: ${err.message}`
     console.error(err)
@@ -98,28 +91,24 @@ const fetchProjects = async () => {
   }
 }
 
-// Save project (Create or Update)
+// Update saveProject function
 const saveProject = async () => {
   loading.value = true
-  error.value = null // Reset error before saving
+  error.value = null
   try {
-    const url = isEditing.value 
-      ? `/api/projects/${formData.value.id}`
-      : '/api/projects'
-    
-    const method = isEditing.value ? 'PUT' : 'POST'
-    
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData.value)
-    })
-    
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.message || 'Failed to save project')
+    if (isEditing.value) {
+      const { error: supabaseError } = await supabase
+        .from('projects')
+        .update(formData.value)
+        .eq('id', formData.value.id)
+
+      if (supabaseError) throw supabaseError
+    } else {
+      const { error: supabaseError } = await supabase
+        .from('projects')
+        .insert([formData.value])
+
+      if (supabaseError) throw supabaseError
     }
     
     await fetchProjects()
@@ -133,21 +122,19 @@ const saveProject = async () => {
   }
 }
 
-// Delete project
+// Update deleteProject function
 const deleteProject = async (id) => {
   if (!confirm('Are you sure you want to delete this project?')) return
   
   loading.value = true
-  error.value = null // Reset error before deleting
+  error.value = null
   try {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'DELETE',
-    })
-    
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.message || 'Failed to delete project')
-    }
+    const { error: supabaseError } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', id)
+
+    if (supabaseError) throw supabaseError
     
     await fetchProjects()
   } catch (err) {

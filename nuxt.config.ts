@@ -20,7 +20,6 @@ export default defineNuxtConfig({
     // Private keys that are exposed to the server
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
-    EDGE_CONFIG: process.env.EDGE_CONFIG,
     // Public keys that are exposed to the client
     public: {
       adminEmail: process.env.NUXT_PUBLIC_ADMIN_EMAIL,
