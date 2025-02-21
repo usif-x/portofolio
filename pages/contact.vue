@@ -135,7 +135,6 @@
 import { ref, reactive } from 'vue'
 import { Icon } from '@iconify/vue'
 import Toast from '~/components/toast.vue'
-import { sendContactMessage } from '@/api/contact'
 useHead({
   title: 'Contact With Me'
 })
@@ -161,39 +160,67 @@ const handleSubmit = async () => {
   // Reset errors
   Object.keys(errors).forEach(key => delete errors[key])
   
+  // Basic validation
+  if (!formData.name.trim()) {
+    errors.name = 'Name is required'
+  }
+  
+  if (!formData.email.trim()) {
+    errors.email = 'Email is required'
+  } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    errors.email = 'Please enter a valid email address'
+  }
+  
+  if (!formData.message.trim()) {
+    errors.message = 'Message is required'
+  }
+  
+  // If there are validation errors, stop submission
+  if (Object.keys(errors).length > 0) {
+    return
+  }
+  
   try {
     isSubmitting.value = true
     
-    // Basic validation
-    if (!formData.name) errors.name = 'Name is required'
-    if (!formData.email) errors.email = 'Email is required'
-    if (!formData.message) errors.message = 'Message is required'
-    
-    if (Object.keys(errors).length > 0) {
-      throw new Error('Validation failed')
-    }
-
-    await sendContactMessage({
-      name: formData.name,
-      email: formData.email,
-      message: formData.message
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData)
     })
-
-    // Clear form
-    Object.keys(formData).forEach(key => formData[key] = '')
     
-    // Show success toast
-    toastRef.value?.addToast('Message sent successfully! I will get back to you soon.', 'success')
+    const data = await response.json()
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send message')
+    }
+    
+    // Reset form after successful submission
+    formData.name = ''
+    formData.email = ''
+    formData.message = ''
+    
+    // Show success message
+    toastRef.value.show({
+      type: 'success',
+      message: 'Your message has been sent successfully!'
+    })
     
   } catch (error) {
-    console.error('Error:', error)
-    if (error.message !== 'Validation failed') {
-      toastRef.value?.addToast('Failed to send message. Please try again.', 'error')
-    }
+    console.error('Error submitting form:', error)
+    
+    // Show error message
+    toastRef.value.show({
+      type: 'error',
+      message: error.message || 'Something went wrong. Please try again later.'
+    })
   } finally {
     isSubmitting.value = false
   }
 }
+
 </script>
 
 <style scoped>
