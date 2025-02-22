@@ -38,7 +38,7 @@ import { Icon } from '@iconify/vue'
 
 const toasts = ref([])
 
-const addToast = (message, type = 'success') => {
+const show = ({ type = 'success', message }) => {
   const id = Date.now()
   toasts.value.push({ id, message, type })
   
@@ -54,6 +54,6 @@ const removeToast = (id) => {
 
 // Expose methods to parent components
 defineExpose({
-  addToast
+  show
 })
-</script> 
+</script>

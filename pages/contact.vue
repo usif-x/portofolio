@@ -130,14 +130,10 @@
     </div>
   </section>
 </template>
-
 <script setup>
 import { ref, reactive } from 'vue'
 import { Icon } from '@iconify/vue'
 import Toast from '~/components/toast.vue'
-useHead({
-  title: 'Contact With Me'
-})
 
 const toastRef = ref(null)
 const formData = reactive({
@@ -148,13 +144,6 @@ const formData = reactive({
 
 const errors = reactive({})
 const isSubmitting = ref(false)
-
-const socialLinks = [
-  { name: 'GitHub', icon: 'mdi:github', url: 'https://github.com/usif-x' },
-  { name: 'LinkedIn', icon: 'mdi:linkedin', url: 'https://linkedin.com/in/yousseifmuhammed' },
-  { name: 'Telegram', icon: 'mdi:telegram', url: 'https://t.me/yousseifmuhammed' },
-  { name: 'Instagram', icon: 'mdi:instagram', url: 'https://instagram.com/yousseifmuhammed' }
-]
 
 const handleSubmit = async () => {
   // Reset errors
@@ -193,26 +182,26 @@ const handleSubmit = async () => {
     
     const data = await response.json()
     
-    if (!response.ok) {
+    if (data.success) {
+      // Reset form after successful submission
+      formData.name = ''
+      formData.email = ''
+      formData.message = ''
+      
+      // Show success message using the correct method
+      toastRef.value?.show({
+        type: 'success',
+        message: 'Your message has been sent successfully!'
+      })
+    } else {
       throw new Error(data.message || 'Failed to send message')
     }
-    
-    // Reset form after successful submission
-    formData.name = ''
-    formData.email = ''
-    formData.message = ''
-    
-    // Show success message
-    toastRef.value.show({
-      type: 'success',
-      message: 'Your message has been sent successfully!'
-    })
     
   } catch (error) {
     console.error('Error submitting form:', error)
     
-    // Show error message
-    toastRef.value.show({
+    // Show error message using the correct method
+    toastRef.value?.show({
       type: 'error',
       message: error.message || 'Something went wrong. Please try again later.'
     })
@@ -220,7 +209,6 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
-
 </script>
 
 <style scoped>
