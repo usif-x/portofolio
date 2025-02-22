@@ -1,37 +1,23 @@
-import { readFileSync, writeFileSync } from 'fs'
-import { resolve } from 'path'
-
 export default defineEventHandler(async (event) => {
   try {
+    const { db } = await connectToDatabase()
     const id = event.context.params.id
     
-    // Load existing data
-    const dataPath = resolve('./data/data.json')
-    const rawData = readFileSync(dataPath, 'utf8')
-    const data = JSON.parse(rawData)
+    if (!id) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Project ID is required'
+      })
+    }
     
-    if (!data.projects) {
+    const result = await db.collection('projects').deleteOne({ _id: id })
+    
+    if (result.deletedCount === 0) {
       throw createError({
         statusCode: 404,
         statusMessage: 'Project not found'
       })
     }
-    
-    // Find project index
-    const projectIndex = data.projects.findIndex(p => p.id === id)
-    
-    if (projectIndex === -1) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Project not found'
-      })
-    }
-    
-    // Remove project
-    data.projects.splice(projectIndex, 1)
-    
-    // Save back to file
-    writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8')
     
     return {
       success: true,
@@ -41,7 +27,7 @@ export default defineEventHandler(async (event) => {
     console.error('Error deleting project:', error)
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || 'Failed to delete project'
+      statusMessage: error.message || 'Failed to delete project'
     })
   }
 })

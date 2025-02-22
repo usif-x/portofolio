@@ -1,12 +1,16 @@
-import { readFileSync, writeFileSync } from 'fs'
-import { resolve } from 'path'
-
 export default defineEventHandler(async (event) => {
   try {
+    const { db } = await connectToDatabase()
     const id = event.context.params.id
     const body = await readBody(event)
+
+    if (!id) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Project ID is required'
+      })
+    }
     
-    // Validate required fields
     if (!body.title || !body.description || !body.category || !body.image) {
       throw createError({
         statusCode: 400,
@@ -14,50 +18,39 @@ export default defineEventHandler(async (event) => {
       })
     }
     
-    // Load existing data
-    const dataPath = resolve('./data/data.json')
-    const rawData = readFileSync(dataPath, 'utf8')
-    const data = JSON.parse(rawData)
-    
-    if (!data.projects) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Project not found'
-      })
-    }
-    
-    // Find project index
-    const projectIndex = data.projects.findIndex(p => p.id === id)
-    
-    if (projectIndex === -1) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Project not found'
-      })
-    }
-    
-    // Update project
-    const updatedProject = {
-      ...data.projects[projectIndex],
-      ...body,
-      id, // Ensure ID remains the same
+    const updateData = {
+      title: body.title,
+      description: body.description,
+      category: body.category,
+      image: body.image,
+      technologies: body.technologies || [],
+      demo: body.demo,
+      github: body.github,
+      status: body.status,
       updatedAt: new Date().toISOString()
     }
     
-    // Update in array
-    data.projects[projectIndex] = updatedProject
+    const result = await db.collection('projects').findOneAndUpdate(
+      { _id: id },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
     
-    // Save back to file
-    writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8')
+    if (!result.value) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Project not found'
+      })
+    }
     
     return {
-      project: updatedProject
+      project: result.value
     }
   } catch (error) {
     console.error('Error updating project:', error)
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || 'Failed to update project'
+      statusMessage: error.message || 'Failed to update project'
     })
   }
 })

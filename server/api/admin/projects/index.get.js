@@ -1,15 +1,14 @@
-// server/api/admin/projects/index.get.js
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
-
 export default defineEventHandler(async (event) => {
   try {
-    const dataPath = resolve('./data/data.json')
-    const rawData = readFileSync(dataPath, 'utf8')
-    const data = JSON.parse(rawData)
+    const { db } = await connectToDatabase()
+    
+    const projects = await db.collection('projects')
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray()
     
     return {
-      projects: data.projects || []
+      projects
     }
   } catch (error) {
     console.error('Error fetching projects:', error)
@@ -19,4 +18,3 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
-

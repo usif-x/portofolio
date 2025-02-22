@@ -450,7 +450,7 @@ const projectModal = reactive({
   show: false,
   isEdit: false,
   data: {
-    id: '',
+    _id: '',
     title: '',
     description: '',
     image: '',
@@ -494,7 +494,7 @@ const fetchProjects = async () => {
 // Project form operations
 const resetProjectFormData = () => {
   projectModal.data = {
-    id: '',
+    _id: '',
     title: '',
     description: '',
     image: '',
@@ -542,21 +542,21 @@ const removeTechnology = (index) => {
 const handleImageError = () => {
   imageError.value = true
 }
+// In your Vue component's script setup:
 
+// Update the saveProject function
 const saveProject = async () => {
   try {
     const isEdit = projectModal.isEdit
     const projectData = { ...projectModal.data }
     
-    // Set timestamps
-    if (!isEdit) {
-      projectData.createdAt = new Date().toISOString()
-      // Don't set ID client-side, let the server handle it
-      delete projectData.id; // Remove empty ID when creating new project
+    // Ensure we have all required fields
+    if (!projectData.title || !projectData.description || !projectData.category || !projectData.image) {
+      showNotification('error', 'Validation Error', 'Please fill in all required fields')
+      return
     }
-    projectData.updatedAt = new Date().toISOString()
     
-    const response = await fetch(`/api/admin/projects${isEdit ? `/${projectData.id}` : ''}`, {
+    const response = await fetch(`/api/admin/projects${isEdit ? `/${projectData._id}` : ''}`, {
       method: isEdit ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -568,31 +568,55 @@ const saveProject = async () => {
       throw new Error(`Failed to ${isEdit ? 'update' : 'create'} project`)
     }
     
-    // Update local state with server response (which includes the generated ID)
-    const data = await response.json();
+    const data = await response.json()
     
     if (isEdit) {
-      const index = projects.value.findIndex(p => p.id === projectData.id)
+      const index = projects.value.findIndex(p => p._id === projectData._id)
       if (index !== -1) {
-        projects.value[index] = data.project || projectData;
+        projects.value[index] = data.project
       }
     } else {
-      // For new projects, use the data returned from server (with generated ID)
       projects.value.unshift(data.project)
     }
     
     showNotification(
       'success', 
       isEdit ? 'Project Updated' : 'Project Created',
-      isEdit 
-        ? `"${projectData.title}" has been updated successfully.`
-        : `"${projectData.title}" has been added to your projects.`
+      `${projectData.title} has been ${isEdit ? 'updated' : 'created'} successfully.`
     )
     
     closeProjectModal()
   } catch (error) {
     console.error('Error saving project:', error)
     showNotification('error', 'Error', `Failed to ${projectModal.isEdit ? 'update' : 'create'} project`)
+  }
+}
+
+// Update the deleteProject function
+const deleteProject = async () => {
+  if (!deleteModal.project?._id) return
+  
+  try {
+    const response = await fetch(`/api/admin/projects/${deleteModal.project._id}`, {
+      method: 'DELETE'
+    })
+    
+    if (!response.ok) {
+      throw new Error('Failed to delete project')
+    }
+    
+    projects.value = projects.value.filter(p => p._id !== deleteModal.project._id)
+    
+    showNotification(
+      'success', 
+      'Project Deleted',
+      `${deleteModal.project.title} has been deleted successfully.`
+    )
+    
+    closeDeleteModal()
+  } catch (error) {
+    console.error('Error deleting project:', error)
+    showNotification('error', 'Error', 'Failed to delete project')
   }
 }
 
@@ -605,7 +629,7 @@ const toggleProjectStatus = async (project) => {
       updatedAt: new Date().toISOString()
     }
     
-    const response = await fetch(`/api/admin/projects/${project.id}`, {
+    const response = await fetch(`/api/admin/projects/${project._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -618,7 +642,7 @@ const toggleProjectStatus = async (project) => {
     }
     
     // Update local state
-    const index = projects.value.findIndex(p => p.id === project.id)
+    const index = projects.value.findIndex(p => p._id === project._id)
     if (index !== -1) {
       projects.value[index] = updatedProject
     }
@@ -644,42 +668,12 @@ const closeDeleteModal = () => {
   deleteModal.show = false
   deleteModal.project = null
 }
-// Continuing from where the code was cut off
-const deleteProject = async () => {
-  if (!deleteModal.project) return
-  
-  try {
-    const projectId = deleteModal.project.id
-    
-    const response = await fetch(`/api/admin/projects/${projectId}`, {
-      method: 'DELETE'
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to delete project')
-    }
-    
-    // Update local state
-    projects.value = projects.value.filter(p => p.id !== projectId)
-    
-    showNotification(
-      'success', 
-      'Project Deleted',
-      `"${deleteModal.project.title}" has been permanently deleted.`
-    )
-    
-    closeDeleteModal()
-  } catch (error) {
-    console.error('Error deleting project:', error)
-    showNotification('error', 'Error', 'Failed to delete project')
-  }
-}
 
 // Notification system
 const showNotification = (type, title, message) => {
   notification.value = { type, title, message }
   
-  // Auto hide notification after 5 seconds
+  // Auto h_ide notification after 5 seconds
   setTimeout(() => {
     if (notification.value) notification.value = null
   }, 5000)
