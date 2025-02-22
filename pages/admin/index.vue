@@ -692,7 +692,7 @@ const formatDate = (dateString) => {
 // Logout function
 const logout = () => {
   // Implementation would depend on your authentication setup
-  navigateTo('/auth/login')
+  navigateTo('/')
 }
 
 // Fetch projects on component mount
