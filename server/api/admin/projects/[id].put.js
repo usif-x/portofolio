@@ -1,16 +1,14 @@
+import { connectToDatabase } from '../../../utils/mongodb'
+import { resolve } from 'path'
+
 export default defineEventHandler(async (event) => {
   try {
     const { db } = await connectToDatabase()
-    const id = event.context.params.id
+    let id = event.context.params.id
+    id = id.toString() // ensure id is a string
     const body = await readBody(event)
-
-    if (!id) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Project ID is required'
-      })
-    }
     
+    // Validate required fields
     if (!body.title || !body.description || !body.category || !body.image) {
       throw createError({
         statusCode: 400,
@@ -31,7 +29,7 @@ export default defineEventHandler(async (event) => {
     }
     
     const result = await db.collection('projects').findOneAndUpdate(
-      { _id: id },
+      { _id: id }, // use the converted id
       { $set: updateData },
       { returnDocument: 'after' }
     )
@@ -43,9 +41,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     
-    return {
-      project: result.value
-    }
+    return { project: result.value }
   } catch (error) {
     console.error('Error updating project:', error)
     throw createError({

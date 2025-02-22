@@ -1,14 +1,10 @@
+import { connectToDatabase } from '../../../utils/mongodb'
+
 export default defineEventHandler(async (event) => {
   try {
     const { db } = await connectToDatabase()
-    const id = event.context.params.id
-    
-    if (!id) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Project ID is required'
-      })
-    }
+    let id = event.context.params.id
+    id = id.toString() // ensure id is a string
     
     const result = await db.collection('projects').deleteOne({ _id: id })
     

@@ -101,7 +101,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-              <tr v-for="project in filteredProjects" :key="project.id" 
+              <tr v-for="project in filteredProjects" :key="project._id" 
                   class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-3">
